@@ -1,45 +1,37 @@
+# Designing the blueprint
+class UserBlueprint: # Designing the blueprint
+    # __init__ -> runs automatically the moment a new object is built.
+    def __init__(self, owner_name: str): 
+        # self -> The object's ay of referring to itself and holding onto its own data
+        pass # Just means "Leave this empty for now"
+
 class Subscriber:
-    def __init__(self, username: str):
-        self.username: str = username
-        self.watchlist: list[str] = [] # Initial list collection
-        self.history: dict = {} # Initial dictionary collection
+    def __init__(self, user_name: str):
+        self.username: str = user_name # It comes from the parameter
+        self.watchlist: list[str] = [] # List for every movie the user have already watched
 
-    # INITIALIZING A METHOD (Behavior)
-    def add_to_watchlist(self, movie: str):
-        if movie not in self.watchlist:
-            self.watchlist.append(movie)
-            print(f"Movie {movie} was added to {self.username}'s watchlist!")
-        else:
-            print(f"{movie} is already in your watchlist!")
+    # Creating a method to add the movie into the user list
+    def add_to_watchlist(self, movie_name, is_active: bool) -> None:
+        # Adding a movie into the watchlist
+        self.watchlist.append(movie_name)
+        self.is_active = is_active
+        print(f"The movie {movie_name} has been added successfully")
 
-# INSTANTIATING A NEW SUBSCRIBER
-new_subscriber = Subscriber("developer_one")
-print(new_subscriber) # It will output a memory address allocation
-print(new_subscriber.username) # It will output the developer username
+# Creating new users
+user_one = Subscriber("Henrique", True) # It creates a new person called Henrique
+user_two = Subscriber("Mariana", False)
 
-platform_user = {} # Initializing a dictionary
-platform_user["developer"] = new_subscriber # Now the information is stored into a dictionary
-print(platform_user["developer"]) # It will output a memory allocation address, because a dictionary is an information container
-print(platform_user["developer"].username) # It will output the developer username
+# Creating an empty dictionary to act as a database
+platform_users = {} # Those brackets act like an empty dictionary
 
-'''
-# Adding movies to the watchlist # THIS METHOD IS WRONG
-platform_user["movielist"] = new_subscriber.watchlist.append("Matrix")
-print(platform_user["movielist"].watchlist)
-'''
+# Adding the users inside the dictionary
+platform_users['Devone'] = user_one # dictionary[key] = value -> platform_user['Devone'] = user_one
+platform_users['Devtwo'] = user_two
 
-# WRONG WAY - WHEN HANDLING CLASSES
-new_subscriber.watchlist.append("Matrix")
-print(new_subscriber.watchlist)
+# Adding movies to users' watchlist
+platform_users['Devone'].add_to_watchlist("Matrix") # Adding the movie Matrix inside the user_one's list
+platform_users['Devtwo'].add_to_watchlist("Pulp Fiction")
+platform_users['Devone'].add_to_watchlist("Interstellar")
+print(f"User name: {platform_users['Devone'].username} | User movie list: {platform_users['Devone'].watchlist}")
 
-# Using a METHOD to add a new movie
-new_subscriber.add_to_watchlist("Inception") # Adding the movie to the watchlist using a class-method 
-
-# Adding the movie into the dictionary
-platform_user["developer"].add_to_watchlist("Interstellar") # Adding a movie using a dictionary statement
-print(platform_user["developer"].watchlist) # Verifying every item inside the watchlist
-
-# LIST COMPREHESIONS
-uppercase_movies = [movie.upper() for movie in platform_user['developer'].watchlist]
-print(uppercase_movies)
-
+print(platform_users['Devone'].values)
