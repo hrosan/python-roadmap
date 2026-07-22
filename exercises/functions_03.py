@@ -15,7 +15,7 @@ def summarize(sum_list: list[float]) -> dict[str, float]:
 # Initializing variables
 dict_sum: dict = {}
 
-# Creating a lista of float numbers
+# Creating a list of float numbers
 test_list = [uniform(1.00,100.00) for _ in range(10)]
 
 # Put the list inside the function
