@@ -4,6 +4,7 @@ import random as rdm # Importing random library - Use uniform()
 sensor_reading: list[dict] = []
 sensor:dict = {}
 sensor_set: tuple[str] = ("T-01","T-02","T-03","T-04","T-05")
+
 # DATA GENERATION
     # CREATING THE LIST OF DICTIONARIES
 for i in range(20):
@@ -15,9 +16,9 @@ for i in range(20):
     sensor_reading.append(sensor.copy()) # Append a shallow copy to the list
 
 # PARSING FUNCTION
-def parse_reading(**sensor_data: dict)->float:
+def parse_reading(sensor_data: dict)->float:
     # VALIDATE VALUE TYPE
-    value = sensor_data.get("value") # Get the value coming from a dictionary, if there's not keep it silent
+    value = sensor_data["value"] # Get the value coming from a dictionary, if there's not keep it silent
     if not isinstance(value,(int,float)):
         raise TypeError (f"Value data type doesn't match with valid type (Number)")
     # VALIDATE VALUE RANGE
@@ -27,7 +28,7 @@ def parse_reading(**sensor_data: dict)->float:
     return round(value,2)
 
 # FUNCTION TO RUN A PIPE-LINE
-def run_pipeline(*readings, threshold=100,label = 'Celsius Monitor') -> dict:
+def run_pipeline(readings, threshold=100,label = 'Celsius Monitor') -> dict:
     '''
     This function takes two arguments
     *readings - arguments of reading dictionary
@@ -38,13 +39,13 @@ def run_pipeline(*readings, threshold=100,label = 'Celsius Monitor') -> dict:
     '''
     error_readings: int = 0
     valid_readings = []
+    above = []
     # LOOP OVER READINGS
     for data in readings:
         # PROCESSING DATA AND HANDLING ERRORS
         try:
             parsed_data = parse_reading(data) # Take the result coming from parse reading
             valid_readings.append(parsed_data)
-            data_read += 1
         except ValueError as value:
             # COUNT ERRORS
             error_readings += 1
@@ -53,4 +54,18 @@ def run_pipeline(*readings, threshold=100,label = 'Celsius Monitor') -> dict:
             # COUNT ERROR
             error_readings += 1
             continue # Returning to loop
+    above = list(filter(lambda v: v>threshold,valid_readings))
+    # RETURN SOMETHING TO CALLER
+    pipeline = {
+        "label": label,
+        "valid": len(valid_readings),
+        "failed": error_readings,
+        "above_threshold": above,
+        "average": round(sum(valid_readings)/len(valid_readings),2) if valid_readings else None
+    }
+    return pipeline
 
+test = run_pipeline(sensor_reading)
+
+for key,value in test.items():
+    print(f"{key}: {value}")
