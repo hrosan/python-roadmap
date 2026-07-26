@@ -1,6 +1,3 @@
-
-
-
 # CREATING A FUNCTION
 def summarize_stats(*args: float, **kwargs) -> None:
     # INITIALIZING DEFAULT VALUES TO KWARGS
